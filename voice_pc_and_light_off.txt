@@ -1,0 +1,28 @@
+from telethon import TelegramClient, events
+import os, requests
+
+api_id =   # type Integer
+api_hash = ""  # type String
+bot_id = 575  # type Integer
+client = TelegramClient("SESSION", api_id, api_hash)  # type String
+
+
+@client.on(events.NewMessage)
+async def handler(event):
+    sender = await event.get_sender()
+    print(sender.id)
+    if (
+        event.is_private
+        and sender.id == bot_id
+    ):
+        message = event.raw_text
+        if message == "SHUTDOWN":
+            r = requests.get('https://cloud.boltiot.com/remote/bolt api key/digitalWrite?pin=0&state=LOW&deviceName=BOLTxxxxx')
+            s = r.status_code
+            # print(s)
+            
+            os.system("shutdown /s /t 5")
+
+
+client.start()
+client.run_until_disconnected()
